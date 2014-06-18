@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">        
+            <param name="ConversionPattern" value=
+                "Milliseconds since program start: %r %n
+                Classname of caller: %C %n
+                Date in ISO8601 format: %d{ISO8601} %n
+                Location of log event: %l %n
+                Message: %m %n %n"/>
+        </layout>
+    </appender>
+
+    <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="C:/inventory.log" />
+        <param name="append" value="true" />
+        <param name="datePattern" value="'.'yyyy-MM-dd-HH" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.SSS} %t %C{1} %-5p %m%n" />
+        </layout>
+    </appender>
+
+    <root>
+        <priority value ="ERROR" />
+        <appender-ref ref="ConsoleAppender"/>
+<!--        <appender-ref ref="file"/>-->
+    </root>
+</log4j:configuration>
