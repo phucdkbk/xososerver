@@ -7,8 +7,8 @@ package com.alandk.lottery.util;
 
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -43,29 +45,24 @@ public class RealtimeCrawler extends TimerTask {
             //Result result = getResultFromKetquaDotnet();
             DateFormat df = new SimpleDateFormat("yyyyMMdd");
             Date date = new Date();
-            int dateInt = Integer.valueOf(df.format(date)).intValue();
-            Class.forName("org.postgresql.Driver");
+            int dateInt = Integer.valueOf(df.format(date));            
             Gson gson = new Gson();
-            conn = (Connection) DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/xosomienbac", "postgres",
-                    "23121988");
+            conn = DatabaseUtils.getConnection();
             if (conn != null) {
                 ps = conn.prepareStatement("select * from lottery a where a.date =?");
                 ps.setInt(1, dateInt);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    StringBuilder sqlQuery = new StringBuilder(
-                            "update lottery  set result = ? where date = ?");
+                    String sqlQuery = "update lottery  set result = ? where date = ?";
                     PreparedStatement prepareStatement = conn
-                            .prepareStatement(sqlQuery.toString());
+                            .prepareStatement(sqlQuery);
                     prepareStatement.setString(1, gson.toJson(result));
                     prepareStatement.setInt(2, dateInt);
                     prepareStatement.execute();
                 } else {
-                    StringBuilder sqlQuery = new StringBuilder(
-                            "insert into lottery values(?,?)");
+                    String sqlQuery = "insert into lottery values(?,?)";
                     PreparedStatement prepareStatement = conn
-                            .prepareStatement(sqlQuery.toString());
+                            .prepareStatement(sqlQuery);
                     prepareStatement.setInt(1, dateInt);
                     prepareStatement.setString(2, gson.toJson(result));
                     prepareStatement.execute();
@@ -74,8 +71,18 @@ public class RealtimeCrawler extends TimerTask {
             if (result.isHasFullValue()) {
                 Thread.sleep(getTimeToNextStart());
             }
-        } catch (InterruptedException | ScriptException | IOException | ClassNotFoundException | SQLException ex) {
-            logger.error("", ex);
+        }  catch (URISyntaxException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ScriptException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

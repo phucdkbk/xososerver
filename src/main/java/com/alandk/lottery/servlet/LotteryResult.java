@@ -5,9 +5,10 @@ package com.alandk.lottery.servlet;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import com.alandk.lottery.util.DatabaseUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LotteryResult extends HttpServlet {
 
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LotteryResult.class);
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,9 +37,10 @@ public class LotteryResult extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws java.net.URISyntaxException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, URISyntaxException {
         response.setContentType("text/html;charset=UTF-8");
         Connection conn = null;
         PreparedStatement ps = null;
@@ -45,12 +49,9 @@ public class LotteryResult extends HttpServlet {
             PrintWriter out = response.getWriter();
             int date = Integer.parseInt(request.getParameter("date"));
 
-            Class.forName("org.postgresql.Driver");
-            conn = (Connection) DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/xosomienbac", "postgres",
-                    "23121988");
+            conn = DatabaseUtils.getConnection();
 
-            ps = conn.prepareStatement("select * from lottery a where a.date =?");
+            ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
             ps.setInt(1, date);
             rs = ps.executeQuery();
 
@@ -60,9 +61,12 @@ public class LotteryResult extends HttpServlet {
             }
 
             out.println(result);
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+            logger.error("", ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("", ex);
         } finally {
             if (rs != null) {
                 try {
@@ -100,7 +104,11 @@ public class LotteryResult extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -114,7 +122,11 @@ public class LotteryResult extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

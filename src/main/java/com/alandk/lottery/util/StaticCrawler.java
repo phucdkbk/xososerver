@@ -2,7 +2,6 @@ package com.alandk.lottery.util;
 
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.text.DateFormat;
@@ -26,11 +25,8 @@ public class StaticCrawler extends TimerTask {
     }
     
     public static void crawler() throws Exception {
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = (Connection) DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/xosomienbac", "postgres",
-                    "23121988");
+        try {            
+            Connection connection = DatabaseUtils.getConnection();
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.YEAR, 2009);
             cal.set(Calendar.MONTH, Calendar.JANUARY);
@@ -41,13 +37,11 @@ public class StaticCrawler extends TimerTask {
             if (connection != null) {
                 connection.setAutoCommit(false);
                 while (cal.getTime().getTime() < new Date().getTime()) {
-                    dateInt = Integer.valueOf(df.format(cal.getTime()))
-                            .intValue();
+                    dateInt = Integer.valueOf(df.format(cal.getTime()));
                     result = crawlerByDate(cal.getTime());
-                    StringBuilder sqlQuery = new StringBuilder(
-                            "insert into lottery values(?,?)");
+                    String sqlQuery = "insert into xosomienbac.lottery values(?,?)";
                     PreparedStatement prepareStatement = connection
-                            .prepareStatement(sqlQuery.toString());
+                            .prepareStatement(sqlQuery);
                     prepareStatement.setInt(1, dateInt);
                     prepareStatement.setString(2, result);
                     prepareStatement.execute();
