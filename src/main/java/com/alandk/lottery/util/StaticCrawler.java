@@ -15,17 +15,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 public class StaticCrawler extends TimerTask {
-    
+
     private static final Logger logger = Logger.getLogger(StaticCrawler.class);
-    
-    public void main(String[] args) throws Exception {
-        System.out.println("Hello Eclipse");
-        crawler();
-        System.out.println("End");
-    }
-    
+
     public static void crawler() throws Exception {
-        try {            
+        try {
             Connection connection = DatabaseUtils.getConnection();
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.YEAR, 2009);
@@ -54,7 +48,7 @@ public class StaticCrawler extends TimerTask {
             throw ex;
         }
     }
-    
+
     public static String crawlerByDate(Date date) throws Exception {
         String strResult = "";
         try {
@@ -87,14 +81,14 @@ public class StaticCrawler extends TimerTask {
             Elements giai7 = doc.getElementsByClass("giai7");
             String giai7Val = giai7.get(0).getAllElements().get(0).childNode(0)
                     .toString();
-            
+
             String[] arrGiai2 = giai2Val.split("-");
             String[] arrGiai3 = giai3Val.split("-");
             String[] arrGiai4 = giai4Val.split("-");
             String[] arrGiai5 = giai5Val.split("-");
             String[] arrGiai6 = giai6Val.split("-");
             String[] arrGiai7 = giai7Val.split("-");
-            
+
             Result result = new Result();
             result.setGiaiDB(giaidbVal);
             result.setGiaiNhat(giai1Val);
@@ -105,17 +99,17 @@ public class StaticCrawler extends TimerTask {
             result.setArrGiaiSau(arrGiai6);
             result.setArrGiaiBay(arrGiai7);
             result.setHaveFullResult();
-            
+
             Gson gson = new Gson();
             strResult = gson.toJson(result);
-            
+
         } catch (IOException e) {
             logger.error(date, e);
             //throw e;
         }
         return strResult;
     }
-    
+
     @Override
     public void run() {
         try {

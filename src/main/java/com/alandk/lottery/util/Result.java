@@ -21,6 +21,79 @@ public class Result {
     private String[] arrGiaiBay;
     private boolean hasFullValue;
 
+    public String getGiaiNhi() {
+        String result = "";
+        for (int i = 0; i < arrGiaiNhi.length; i++) {
+            if (i != arrGiaiNhi.length - 1) {
+                result += arrGiaiNhi[i] + "-";
+            } else {
+                result += arrGiaiNhi[i];
+            }
+        }
+        return result;
+    }
+
+    public String getGiaiBa() {
+        String result = "";
+        for (int i = 0; i < arrGiaiBa.length; i++) {
+            if (i != arrGiaiBa.length - 1) {
+                result += arrGiaiBa[i] + "-";
+            } else {
+                result += arrGiaiBa[i];
+            }
+        }
+        return result;
+    }
+
+    public String getGiaiTu() {
+        String result = "";
+        for (int i = 0; i < arrGiaiTu.length; i++) {
+            if (i != arrGiaiTu.length - 1) {
+                result += arrGiaiTu[i] + "-";
+            } else {
+                result += arrGiaiTu[i];
+            }
+
+        }
+        return result;
+    }
+
+    public String getGiaiNam() {
+        String result = "";
+        for (int i = 0; i < arrGiaiNam.length; i++) {
+            if (i != arrGiaiNam.length - 1) {
+                result += arrGiaiNam[i] + "-";
+            } else {
+                result += arrGiaiNam[i];
+            }
+        }
+        return result;
+    }
+
+    public String getGiaiSau() {
+        String result = "";
+        for (int i = 0; i < arrGiaiSau.length; i++) {
+            if (i != arrGiaiSau.length - 1) {
+                result += arrGiaiSau[i] + "-";
+            } else {
+                result += arrGiaiSau[i];
+            }
+        }
+        return result;
+    }
+
+    public String getGiaiBay() {
+        String result = "";
+        for (int i = 0; i < arrGiaiBay.length; i++) {
+            if (i != arrGiaiBay.length - 1) {
+                result += arrGiaiBay[i] + "-";
+            } else {
+                result += arrGiaiBay[i];
+            }
+        }
+        return result;
+    }
+
     public String getGiaiDB() {
         return giaiDB;
     }
@@ -92,7 +165,6 @@ public class Result {
 //    public void setHasFullValue(boolean hasFullValue) {
 //        this.hasFullValue = hasFullValue;
 //    }
-
     public void setHaveFullResult() {
         this.hasFullValue = checkHaveFullResult();
     }

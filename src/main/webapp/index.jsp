@@ -8,6 +8,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>XỔ SỐ MIỀN BẮC</h1>
+        <a href="index.jsp">Trang chủ</a>
+        <a href="ShowResult">Xem kết quả</a>
+        <a href="UpdateResult">Cập nhật kết quả</a>
     </body>
 </html>

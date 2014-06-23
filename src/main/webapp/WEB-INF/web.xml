@@ -9,9 +9,25 @@
         <servlet-name>LotteryResult</servlet-name>
         <servlet-class>com.alandk.lottery.servlet.LotteryResult</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShowResult</servlet-name>
+        <servlet-class>com.alandk.lottery.servlet.ShowResult</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateResult</servlet-name>
+        <servlet-class>com.alandk.lottery.servlet.UpdateResult</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LotteryResult</servlet-name>
         <url-pattern>/LotteryResult</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowResult</servlet-name>
+        <url-pattern>/ShowResult</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateResult</servlet-name>
+        <url-pattern>/UpdateResult</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

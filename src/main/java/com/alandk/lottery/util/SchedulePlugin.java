@@ -26,8 +26,8 @@ public class SchedulePlugin implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         Calendar cal = Calendar.getInstance();
         //cal.add(Calendar.MINUTE, 10);
-        staticCrawlerTimer = new Timer();
-        staticCrawlerTimer.schedule(new StaticCrawler(), cal.getTime());
+//        staticCrawlerTimer = new Timer();
+//        staticCrawlerTimer.schedule(new StaticCrawler(), cal.getTime());
 
 //        cal.set(Calendar.HOUR_OF_DAY, 18);
 //        cal.set(Calendar.MINUTE, 18);
