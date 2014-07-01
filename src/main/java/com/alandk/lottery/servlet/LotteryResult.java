@@ -60,7 +60,7 @@ public class LotteryResult extends HttpServlet {
                 result = rs.getString("result");
             }
 
-            out.println(result);
+            out.print(result);
         } catch (SQLException ex) {
             Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
             logger.error("", ex);

@@ -15,7 +15,8 @@
         <script src="share/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>
         <script>
             $(function() {
-                $("#datepicker").datepicker();
+                //$("#datepicker").datepicker();
+                $("#datepicker").datepicker({dateFormat: 'dd/mm/yy'});
             });
 
             showResult = function() {

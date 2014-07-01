@@ -45,7 +45,7 @@ public class RealtimeCrawler extends TimerTask {
             //Result result = getResultFromKetquaDotnet();
             DateFormat df = new SimpleDateFormat("yyyyMMdd");
             Date date = new Date();
-            int dateInt = Integer.valueOf(df.format(date));            
+            int dateInt = Integer.valueOf(df.format(date));
             Gson gson = new Gson();
             conn = DatabaseUtils.getConnection();
             if (conn != null) {
@@ -85,8 +85,8 @@ public class RealtimeCrawler extends TimerTask {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+
     private long getTimeToNextStart() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);
@@ -128,7 +128,7 @@ public class RealtimeCrawler extends TimerTask {
             data = data.substring(15, data.length() - 2);
             giaiNhat = (String) engine.eval(data);
         }
-        
+
         if (giaiNhat.isEmpty()){
             giaiNhat = Jsoup.parse(elements.get(1).html()).text();
         }
