@@ -63,7 +63,7 @@ public class LotteryResult extends HttpServlet {
                 result = rs.getString("result");
             }
 
-            out.print(result + new Date());
+            out.print(result);
             ps.close();
             conn.close();
         } catch (SQLException ex) {
