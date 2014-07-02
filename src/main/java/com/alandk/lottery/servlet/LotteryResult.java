@@ -14,6 +14,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -38,9 +39,11 @@ public class LotteryResult extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      * @throws java.net.URISyntaxException
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, URISyntaxException {
+            throws ServletException, IOException, URISyntaxException, SQLException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         Connection conn = null;
         PreparedStatement ps = null;
@@ -60,13 +63,15 @@ public class LotteryResult extends HttpServlet {
                 result = rs.getString("result");
             }
 
-            out.print(result);
+            out.print(result + new Date());
+            ps.close();
+            conn.close();
         } catch (SQLException ex) {
-            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
             logger.error("", ex);
+            throw ex;
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
             logger.error("", ex);
+            throw ex;
         } finally {
             if (rs != null) {
                 try {
@@ -108,6 +113,13 @@ public class LotteryResult extends HttpServlet {
             processRequest(request, response);
         } catch (URISyntaxException ex) {
             Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
         }
     }
 
@@ -124,8 +136,16 @@ public class LotteryResult extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
+
         } catch (URISyntaxException ex) {
             Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LotteryResult.class.getName()).log(Level.SEVERE, null, ex);
+            response.getWriter().print(ex.getMessage());
         }
     }
 

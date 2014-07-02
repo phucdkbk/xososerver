@@ -62,6 +62,8 @@ public class ShowResult extends HttpServlet {
                     Result resultObject = gson.fromJson(result, Result.class);
                     request.setAttribute("resultObject", resultObject);
                 }
+                ps.close();
+                conn.close();
             }
             RequestDispatcher dis = getServletContext().getRequestDispatcher("/showResult.jsp");
             dis.forward(request, response);

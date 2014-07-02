@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author phucdk
  */
 public class UpdateResult extends HttpServlet {
+    
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StaticCrawler.class);
 
@@ -63,6 +64,8 @@ public class UpdateResult extends HttpServlet {
                         request.setAttribute("resultObject", resultObject);
                     }
                     request.setAttribute("date", date);
+                    ps.close();
+                    conn.close();
                 }
             } else if (type != null && "update".equals(type)) {
                 String date = request.getParameter("currentDate");
@@ -96,6 +99,8 @@ public class UpdateResult extends HttpServlet {
                     request.setAttribute("date", date);
                     request.setAttribute("meessage", meessage);
                     request.setAttribute("resultObject", result);
+                    ps.close();
+                    conn.close();
                 }
             }
             RequestDispatcher dis = getServletContext().getRequestDispatcher("/updateResult.jsp");
