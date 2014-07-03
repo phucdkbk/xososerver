@@ -41,37 +41,36 @@ public class RealtimeCrawler extends TimerTask {
         PreparedStatement ps;
         ResultSet rs;
         try {
-            Result result = getResultFromXSKTDotComDotvn();
-            //Result result = getResultFromKetquaDotnet();
+            System.out.println("Start automatic crawling");
+            Result currentResult;            
             DateFormat df = new SimpleDateFormat("yyyyMMdd");
             Date date = new Date();
             int dateInt = Integer.valueOf(df.format(date));
             Gson gson = new Gson();
             conn = DatabaseUtils.getConnection();
-            if (conn != null) {
-                ps = conn.prepareStatement("select * from lottery a where a.date =?");
-                ps.setInt(1, dateInt);
-                rs = ps.executeQuery();
-                if (rs.next()) {
-                    String sqlQuery = "update lottery  set result = ? where date = ?";
-                    PreparedStatement prepareStatement = conn
-                            .prepareStatement(sqlQuery);
-                    prepareStatement.setString(1, gson.toJson(result));
-                    prepareStatement.setInt(2, dateInt);
-                    prepareStatement.execute();
+            ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
+            ps.setInt(1, dateInt);
+            rs = ps.executeQuery();
+            String strResult = "";
+            while (rs.next()) {
+                strResult = rs.getString("result");
+            }
+            if (strResult != null && !strResult.isEmpty()) {
+                currentResult = gson.fromJson(strResult.trim(), Result.class);
+                currentResult.setHaveFullResult();
+                if (!currentResult.isHasFullValue()) {
+                    crawler(conn, dateInt);
                 } else {
-                    String sqlQuery = "insert into lottery values(?,?)";
-                    PreparedStatement prepareStatement = conn
-                            .prepareStatement(sqlQuery);
-                    prepareStatement.setInt(1, dateInt);
-                    prepareStatement.setString(2, gson.toJson(result));
-                    prepareStatement.execute();
+                    System.out.println("Have full value. Don't need to crawl");
                 }
+            } else {
+                crawler(conn, dateInt);
             }
-            if (result.isHasFullValue()) {
-                Thread.sleep(getTimeToNextStart());
+            if (conn != null) {
+                conn.close();
             }
-        }  catch (URISyntaxException ex) {
+            System.out.println("End automatic crawling");
+        } catch (URISyntaxException ex) {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ScriptException ex) {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,17 +80,50 @@ public class RealtimeCrawler extends TimerTask {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        catch (InterruptedException ex) {
+//            Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
+    private void crawler(Connection conn, int dateInt) throws IOException, SQLException, ScriptException {
+        Gson gson = new Gson();
+        PreparedStatement ps;
+        ResultSet rs;
+        Result result = getResultFromXSKTDotComDotvn();
+        //Result result = getResultFromKetquaDotnet();
+        ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
+        ps.setInt(1, dateInt);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            String sqlQuery = "update xosomienbac.lottery set result = ? where date = ?";
+            PreparedStatement prepareStatement = conn
+                    .prepareStatement(sqlQuery);
+            prepareStatement.setString(1, gson.toJson(result));
+            prepareStatement.setInt(2, dateInt);
+            prepareStatement.execute();
+            prepareStatement.close();
+        } else {
+            String sqlQuery = "insert into xosomienbac.lottery values(?,?)";
+            PreparedStatement prepareStatement = conn
+                    .prepareStatement(sqlQuery);
+            prepareStatement.setInt(1, dateInt);
+            prepareStatement.setString(2, gson.toJson(result));
+            prepareStatement.execute();
+            prepareStatement.close();
+        }
+        if (result.isHasFullValue()) {
+            //System.out.println("Sleep to next day");
+            //Thread.sleep(getTimeToNextStart());
+        }
+        ps.close();
+    }
 
     private long getTimeToNextStart() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);
-        cal.set(Calendar.HOUR, 18);
-        cal.set(Calendar.MINUTE, 18);
+        cal.set(Calendar.HOUR, 11);
+        cal.set(Calendar.MINUTE, 15);
         return cal.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
     }
 
@@ -117,7 +149,7 @@ public class RealtimeCrawler extends TimerTask {
             data = data.substring(15, data.length() - 2);
             giaiDB = (String) engine.eval(data);
         }
-        if (giaiDB.isEmpty()){
+        if (giaiDB.isEmpty()) {
             giaiDB = Jsoup.parse(elements.get(0).html()).text();
         }
 
@@ -129,7 +161,7 @@ public class RealtimeCrawler extends TimerTask {
             giaiNhat = (String) engine.eval(data);
         }
 
-        if (giaiNhat.isEmpty()){
+        if (giaiNhat.isEmpty()) {
             giaiNhat = Jsoup.parse(elements.get(1).html()).text();
         }
 

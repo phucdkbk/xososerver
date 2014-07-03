@@ -18,21 +18,25 @@ import javax.servlet.ServletContextListener;
  */
 public class SchedulePlugin implements ServletContextListener {
 
-    public static final int PERIOD = 1 * 60 * 1000;
+    public static final int PERIOD = 1 * 40 * 1000;
     private Timer timer;
     private Timer staticCrawlerTimer;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         Calendar cal = Calendar.getInstance();
-        //cal.add(Calendar.MINUTE, 10);
+//        cal.add(Calendar.SECOND, 30);
 //        staticCrawlerTimer = new Timer();
 //        staticCrawlerTimer.schedule(new StaticCrawler(), cal.getTime());
-
-//        cal.set(Calendar.HOUR_OF_DAY, 18);
-//        cal.set(Calendar.MINUTE, 18);
-//        timer = new Timer();
-//        timer.scheduleAtFixedRate(new RealtimeCrawler(), new Date(), PERIOD);
+        
+//        cal.add(Calendar.DATE, 1);
+//        cal.set(Calendar.HOUR_OF_DAY, 11);
+//        cal.set(Calendar.MINUTE, 15);
+        
+        cal.add(Calendar.MINUTE, 3);
+        
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new RealtimeCrawler(), cal.getTime(), PERIOD);
     }
 
     @Override
