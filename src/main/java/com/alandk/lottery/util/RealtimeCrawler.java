@@ -37,39 +37,46 @@ public class RealtimeCrawler extends TimerTask {
 
     @Override
     public void run() {
-        Connection conn;
-        PreparedStatement ps;
-        ResultSet rs;
         try {
-            System.out.println("Start automatic crawling");
-            Result currentResult;            
-            DateFormat df = new SimpleDateFormat("yyyyMMdd");
-            Date date = new Date();
-            int dateInt = Integer.valueOf(df.format(date));
-            Gson gson = new Gson();
-            conn = DatabaseUtils.getConnection();
-            ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
-            ps.setInt(1, dateInt);
-            rs = ps.executeQuery();
-            String strResult = "";
-            while (rs.next()) {
-                strResult = rs.getString("result");
-            }
-            if (strResult != null && !strResult.isEmpty()) {
-                currentResult = gson.fromJson(strResult.trim(), Result.class);
-                currentResult.setHaveFullResult();
-                if (!currentResult.isHasFullValue()) {
-                    crawler(conn, dateInt);
-                } else {
-                    System.out.println("Have full value. Don't need to crawl");
+            Calendar cal = Calendar.getInstance();
+            int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+            if (hourOfDay == 18) {
+                Connection conn;
+                PreparedStatement ps;
+                ResultSet rs;
+
+                System.out.println("Start automatic crawling");
+                Result currentResult;
+                DateFormat df = new SimpleDateFormat("yyyyMMdd");
+                Date date = new Date();
+                int dateInt = Integer.valueOf(df.format(date));
+                Gson gson = new Gson();
+                conn = DatabaseUtils.getConnection();
+                ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
+                ps.setInt(1, dateInt);
+                rs = ps.executeQuery();
+                String strResult = "";
+                while (rs.next()) {
+                    strResult = rs.getString("result");
                 }
+                if (strResult != null && !strResult.isEmpty()) {
+                    currentResult = gson.fromJson(strResult.trim(), Result.class);
+                    currentResult.setHaveFullResult();
+                    if (!currentResult.isHasFullValue()) {
+                        crawler(conn, dateInt);
+                    } else {
+                        System.out.println("Have full value. Don't need to crawl");
+                    }
+                } else {
+                    crawler(conn, dateInt);
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+                System.out.println("End automatic crawling");
             } else {
-                crawler(conn, dateInt);
+                System.out.println("Do not in crawler time");
             }
-            if (conn != null) {
-                conn.close();
-            }
-            System.out.println("End automatic crawling");
         } catch (URISyntaxException ex) {
             Logger.getLogger(RealtimeCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ScriptException ex) {
