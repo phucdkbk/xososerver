@@ -20,6 +20,7 @@ public class Result {
     private String[] arrGiaiSau;
     private String[] arrGiaiBay;
     private boolean hasFullValue;
+    private String dateMonth;
 
     public String getGiaiNhi() {
         String result = "";
@@ -243,5 +244,13 @@ public class Result {
         }
         return true;
     }
+
+    public String getDateMonth() {
+        return dateMonth;
+    }
+
+    public void setDateMonth(String dateMonth) {
+        this.dateMonth = dateMonth;
+    }        
 
 }

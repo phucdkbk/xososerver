@@ -63,6 +63,7 @@ public class RealtimeCrawler extends TimerTask {
                     currentResult = gson.fromJson(strResult.trim(), Result.class);
                     currentResult.setHaveFullResult();
                     if (!currentResult.isHasFullValue()) {
+//                    if (true) {
                         crawler(conn, dateInt);
                     } else {
                         System.out.println("Have full value. Don't need to crawl");
@@ -102,26 +103,30 @@ public class RealtimeCrawler extends TimerTask {
         ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
         ps.setInt(1, dateInt);
         rs = ps.executeQuery();
-        if (rs.next()) {
-            String sqlQuery = "update xosomienbac.lottery set result = ? where date = ?";
-            PreparedStatement prepareStatement = conn
-                    .prepareStatement(sqlQuery);
-            prepareStatement.setString(1, gson.toJson(result));
-            prepareStatement.setInt(2, dateInt);
-            prepareStatement.execute();
-            prepareStatement.close();
-        } else {
-            String sqlQuery = "insert into xosomienbac.lottery values(?,?)";
-            PreparedStatement prepareStatement = conn
-                    .prepareStatement(sqlQuery);
-            prepareStatement.setInt(1, dateInt);
-            prepareStatement.setString(2, gson.toJson(result));
-            prepareStatement.execute();
-            prepareStatement.close();
-        }
-        if (result.isHasFullValue()) {
+        DateFormat df = new SimpleDateFormat("ddMM");
+        String currentDateMonth = df.format(new Date());
+        if (currentDateMonth.equals(result.getDateMonth())) {
+            if (rs.next()) {
+                String sqlQuery = "update xosomienbac.lottery set result = ? where date = ?";
+                PreparedStatement prepareStatement = conn
+                        .prepareStatement(sqlQuery);
+                prepareStatement.setString(1, gson.toJson(result));
+                prepareStatement.setInt(2, dateInt);
+                prepareStatement.execute();
+                prepareStatement.close();
+            } else {
+                String sqlQuery = "insert into xosomienbac.lottery values(?,?)";
+                PreparedStatement prepareStatement = conn
+                        .prepareStatement(sqlQuery);
+                prepareStatement.setInt(1, dateInt);
+                prepareStatement.setString(2, gson.toJson(result));
+                prepareStatement.execute();
+                prepareStatement.close();
+            }
+            if (result.isHasFullValue()) {
             //System.out.println("Sleep to next day");
-            //Thread.sleep(getTimeToNextStart());
+                //Thread.sleep(getTimeToNextStart());
+            }
         }
         ps.close();
     }
@@ -148,6 +153,11 @@ public class RealtimeCrawler extends TimerTask {
         Document doc = Jsoup.connect("http://xskt.com.vn/").get();
         Element rmb = doc.getElementById("rmb");
         Elements elements = rmb.getElementsByClass("result-prize");
+
+        Elements resultDate = doc.getElementsByTag("h2");
+
+        String strDate = resultDate.get(0).text();
+        strDate = strDate.replaceAll("[^0-9.,]+", "");
 
         //Giai dac biet
         String data = elements.get(0).data();
@@ -200,6 +210,7 @@ public class RealtimeCrawler extends TimerTask {
         result.setArrGiaiSau(giaiSau.split(" "));
         result.setArrGiaiBay(giaiBay.split(" "));
         result.setHaveFullResult();
+        result.setDateMonth(strDate);
 //        Gson gson = new Gson();
 //        String jsonValue = gson.toJson(result);
         return result;
