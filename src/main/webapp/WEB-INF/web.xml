@@ -21,6 +21,10 @@
         <servlet-name>ThongkeLogan</servlet-name>
         <servlet-class>com.alandk.lottery.servlet.ThongkeLogan</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ThongkeItNhieu</servlet-name>
+        <servlet-class>com.alandk.lottery.servlet.ThongkeItNhieu</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LotteryResult</servlet-name>
         <url-pattern>/LotteryResult</url-pattern>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>ThongkeLogan</servlet-name>
         <url-pattern>/ThongkeLogan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ThongkeItNhieu</servlet-name>
+        <url-pattern>/ThongkeItNhieu</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -18,9 +18,20 @@ public interface Constants {
             public static final int LO = 1;
             public static final int CAP_LO = 2;
         }
-        
+
         public static final int DATE_TO_GET_LO_GAN = 5000;
         public static final int MIN_DATE_LO_GAN = 0;
+    }
+
+    public interface IT_NHIEU {
+
+        public interface TYPE {
+
+            public static final int LO = 1;
+            public static final int DE = 2;
+        }
+        
+        public static final int MIN_IT_NHIEU = 0;
     }
 
 }
