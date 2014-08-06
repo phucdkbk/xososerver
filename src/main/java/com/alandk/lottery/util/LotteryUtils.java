@@ -22,7 +22,7 @@ public class LotteryUtils {
 
     public static List<String> getListResultLoto(Result resultObject) {
         List<String> listResult = new ArrayList<String>();
-        if (resultObject.isHasFullValue()) {
+        if (resultObject != null && resultObject.isHasFullValue()) {
             listResult.add(resultObject.getGiaiDB().substring(resultObject.getGiaiDB().length() - 2, resultObject.getGiaiDB().length()));
             listResult.add(resultObject.getGiaiNhat().substring(resultObject.getGiaiNhat().length() - 2, resultObject.getGiaiNhat().length()));
             listResult.addAll(getListResultByArrResult(resultObject.getArrGiaiNhi()));
@@ -37,7 +37,7 @@ public class LotteryUtils {
 
     public static String getKetquaDe(Result resultObject) {
         String de = "";
-        if (resultObject.isHasFullValue()) {
+        if (resultObject != null && resultObject.isHasFullValue()) {
             de = resultObject.getGiaiDB().substring(resultObject.getGiaiDB().length() - 2, resultObject.getGiaiDB().length());
         }
         return de;

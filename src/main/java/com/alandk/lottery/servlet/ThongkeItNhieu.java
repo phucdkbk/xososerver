@@ -60,10 +60,10 @@ public class ThongkeItNhieu extends HttpServlet {
             Map<String, CountItNhieu> mapCountItNhieuLo = new HashMap<String, CountItNhieu>();
             Map<String, CountItNhieu> mapCountItNhieuDe = new HashMap<String, CountItNhieu>();
             initListCountItNhieuValue(mapCountItNhieuLo, mapCountItNhieuDe);
-            int songay = Integer.valueOf(request.getParameter("songay")).intValue();
+            int songay = Integer.parseInt(request.getParameter("songay"));
             Date startDate = getStartDateToThongkeItNhieu(songay);
             //int soluong = Integer.parseInt(request.getParameter("soluong"));
-            int startDateInt = Integer.valueOf(DateTimeUtils.convertDateToString(startDate, "yyyyMMdd")).intValue();
+            int startDateInt = Integer.parseInt(DateTimeUtils.convertDateToString(startDate, "yyyyMMdd"));
             conn = DatabaseUtils.getConnection();
             ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date > ? order by a.date desc");
             ps.setInt(1, startDateInt);
@@ -202,7 +202,7 @@ public class ThongkeItNhieu extends HttpServlet {
             if (countItNhieu != null) {
                 countItNhieu.setCount(countItNhieu.getCount() + 1);
             }
-        }
+        }        
     }
 
     private void updateCountItNhieuDe(Result resultObject, Map<String, CountItNhieu> mapCountItNhieuDe) {
