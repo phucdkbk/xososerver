@@ -23,8 +23,8 @@ public class LotteryUtils {
     public static List<String> getListResultLoto(Result resultObject) {
         List<String> listResult = new ArrayList<String>();
         if (resultObject != null && resultObject.isHasFullValue()) {
-            listResult.add(resultObject.getGiaiDB().substring(resultObject.getGiaiDB().length() - 2, resultObject.getGiaiDB().length()));
-            listResult.add(resultObject.getGiaiNhat().substring(resultObject.getGiaiNhat().length() - 2, resultObject.getGiaiNhat().length()));
+            listResult.add(resultObject.getGiaiDB().trim().substring(resultObject.getGiaiDB().trim().length() - 2, resultObject.getGiaiDB().trim().length()));
+            listResult.add(resultObject.getGiaiNhat().trim().substring(resultObject.getGiaiNhat().trim().length() - 2, resultObject.getGiaiNhat().trim().length()));
             listResult.addAll(getListResultByArrResult(resultObject.getArrGiaiNhi()));
             listResult.addAll(getListResultByArrResult(resultObject.getArrGiaiBa()));
             listResult.addAll(getListResultByArrResult(resultObject.getArrGiaiTu()));
@@ -46,7 +46,7 @@ public class LotteryUtils {
     private static Collection<? extends String> getListResultByArrResult(String[] arrResult) {
         List<String> listResult = new ArrayList<String>();
         for (String result : arrResult) {
-            listResult.add(result.substring(result.length() - 2, result.length()));
+            listResult.add(result.trim().substring(result.trim().length() - 2, result.trim().length()));
         }
         return listResult;
     }

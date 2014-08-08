@@ -12,5 +12,6 @@
         <a href="index.jsp">Trang chủ</a>
         <a href="ShowResult">Xem kết quả</a>
         <a href="UpdateResult">Cập nhật kết quả</a>
+        <a href="VerifyResult">Kiểm tra kết quả lỗi</a>
     </body>
 </html>
