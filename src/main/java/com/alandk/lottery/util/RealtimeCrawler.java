@@ -98,7 +98,16 @@ public class RealtimeCrawler extends TimerTask {
         Gson gson = new Gson();
         PreparedStatement ps;
         ResultSet rs;
-        Result result = getResultFromXSKTDotComDotvn();
+        Result result =null;
+        try{
+            result = getResultFromXSKTDotComDotvn();
+        } catch(Exception ex){
+            
+        }
+        if(result == null){
+            //result = getResultFromKetquaDotnet();
+        }
+        
         //Result result = getResultFromKetquaDotnet();
         ps = conn.prepareStatement("select * from xosomienbac.lottery a where a.date =?");
         ps.setInt(1, dateInt);
@@ -225,12 +234,18 @@ public class RealtimeCrawler extends TimerTask {
      * @throws IOException
      */
     public static Result getResultFromKetquaDotnet() throws ScriptException, IOException {
-        Document doc = Jsoup.connect("http://ketqua.net/").get();
+        Document doc = Jsoup.connect("http://ketqua.net").userAgent("Mozilla").get();
         Element element = doc.getElementById("ketqua");
         Elements es = element.children();
 
         Elements esResult = es.get(0).getElementsByTag("tbody").get(0).children();
         Element e;
+        
+        Elements resultDate = doc.getElementsByTag("h2");
+
+        String strDate = resultDate.get(1).text();
+        strDate = strDate.replaceAll("[^0-9.,]+", "");
+        strDate = strDate.substring(0, 4);
 
         //Giai dac biet
         String giaiDB = esResult.get(0).getElementsByClass("bor").get(0).html();
@@ -291,6 +306,7 @@ public class RealtimeCrawler extends TimerTask {
         result.setArrGiaiSau(arrGiaiSau);
         result.setArrGiaiBay(arrGiaiBay);
         result.setHaveFullResult();
+        result.setDateMonth(strDate);
         return result;
     }
 }
